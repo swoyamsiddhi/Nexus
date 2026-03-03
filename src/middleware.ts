@@ -7,23 +7,23 @@ export default auth(function middleware(req: NextRequest & { auth: { user?: { ro
     const session = req.auth;
     const user = session?.user;
 
-    // Public paths
-    const publicPaths = ["/", "/auth/signin", "/auth/signup", "/auth/verify-email", "/auth/error"];
-    if (publicPaths.includes(pathname) || pathname.startsWith("/api/auth")) {
+    // Public paths — always allow
+    const publicPaths = ["/", "/auth/signin", "/auth/signup", "/auth/verify-email", "/auth/error", "/onboarding"];
+    if (publicPaths.some(p => pathname === p || pathname.startsWith(p)) || pathname.startsWith("/api/auth")) {
         return NextResponse.next();
     }
 
-    // Not authenticated
+    // Not authenticated → sign in
     if (!user) {
         return NextResponse.redirect(new URL("/auth/signin", req.url));
     }
 
-    // Onboarding gate (except already on onboarding)
-    if (user.onboardingStatus === "PENDING" && !pathname.startsWith("/onboarding")) {
-        return NextResponse.redirect(new URL("/onboarding", req.url));
-    }
+    // NOTE: Onboarding gate is intentionally NOT here.
+    // Middleware reads the JWT cookie directly which may be stale after onboarding completes.
+    // Each role's layout.tsx checks onboardingStatus server-side via auth() which re-runs
+    // the JWT callback with a fresh DB lookup, ensuring accuracy.
 
-    // Organizer/Faculty must be approved for role-specific routes
+    // Organizer/Faculty verification gate
     if (user.role === "ORGANIZER" && user.verificationStatus === "PENDING" && pathname.startsWith("/organizer")) {
         return NextResponse.redirect(new URL("/auth/pending-approval", req.url));
     }

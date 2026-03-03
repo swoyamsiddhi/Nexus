@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     Zap, User, BookOpen, Heart,
-    CheckCircle2, Loader2, ChevronRight, Plus, X
+    CheckCircle2, Loader2, ChevronRight, Plus, X, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,13 +39,31 @@ const BRANCH_OPTIONS = [
     "Civil", "Chemical", "Biotechnology", "Mathematics", "Physics", "MBA", "Other"
 ];
 
+const slideVariants = {
+    enter: (direction: number) => ({
+        x: direction > 0 ? 80 : -80,
+        opacity: 0,
+        filter: "blur(4px)",
+    }),
+    center: {
+        x: 0,
+        opacity: 1,
+        filter: "blur(0px)",
+    },
+    exit: (direction: number) => ({
+        x: direction < 0 ? 80 : -80,
+        opacity: 0,
+        filter: "blur(4px)",
+    }),
+};
+
 export default function OnboardingPage() {
-    const { data: session, update } = useSession();
-    const router = useRouter();
+    const { data: session } = useSession();
     const { toast } = useToast();
     const role = session?.user?.role || "STUDENT";
 
     const [step, setStep] = useState(0);
+    const [direction, setDirection] = useState(0);
     const [loading, setLoading] = useState(false);
 
     // Form state
@@ -69,6 +87,9 @@ export default function OnboardingPage() {
         interests.includes(i) ? interests.filter((x) => x !== i) : [...interests, i]
     );
 
+    const goNext = () => { setDirection(1); setStep(s => s + 1); };
+    const goBack = () => { setDirection(-1); setStep(s => s - 1); };
+
     const handleComplete = async () => {
         setLoading(true);
         try {
@@ -80,11 +101,13 @@ export default function OnboardingPage() {
                     data: { rollNumber, branch, year: parseInt(year) || 1, isHosteler, bio, skills, interests },
                 }),
             });
-            if (!res.ok) throw new Error("Failed to save onboarding");
-            await update({ onboardingStatus: "COMPLETE" });
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.error || "Failed to save onboarding");
+            }
             toast({ title: "Welcome to Campus Nexus! 🎉" });
             const roleMap: Record<string, string> = { STUDENT: "/student", FACULTY: "/faculty", ORGANIZER: "/organizer", ADMIN: "/admin" };
-            router.push(roleMap[role] || "/student");
+            window.location.replace(roleMap[role] || "/student");
         } catch {
             toast({ variant: "destructive", title: "Error", description: "Failed to save. Please try again." });
         } finally {
@@ -100,225 +123,341 @@ export default function OnboardingPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 flex items-center justify-center p-4">
-            <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden selection:bg-blue-500/30 selection:text-blue-200">
+            {/* Animated background */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,_rgba(37,99,235,0.12)_0%,_transparent_50%)]" />
+                <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,_rgba(147,51,234,0.12)_0%,_transparent_50%)]" />
+                <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-600/15 rounded-full blur-[120px] animate-blob mix-blend-screen" />
+                <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-purple-600/15 rounded-full blur-[120px] animate-blob animation-delay-2000 mix-blend-screen" />
+            </div>
 
-            <div className="relative w-full max-w-2xl">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="relative z-10 w-full max-w-2xl"
+            >
                 {/* Header */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center gap-2 mb-4">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                            <Zap className="w-4 h-4 text-white" />
+                <div className="text-center mb-10">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.1 }}
+                        className="inline-flex items-center gap-2.5 mb-5"
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
+                            <Zap className="w-5 h-5 text-white" />
                         </div>
                         <span className="text-xl font-display font-bold text-white">Campus Nexus</span>
-                    </div>
-                    <h1 className="text-3xl font-display font-bold text-white mb-2">Set up your profile</h1>
-                    <p className="text-white/50">This helps us match you with the right opportunities</p>
+                    </motion.div>
+                    <motion.h1
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-3xl md:text-4xl font-display font-bold text-white mb-3 tracking-tight"
+                    >
+                        Set up your profile
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-white/50 text-base font-medium"
+                    >
+                        This helps us match you with the right opportunities
+                    </motion.p>
                 </div>
 
                 {/* Step indicators */}
-                <div className="flex items-center justify-center gap-0 mb-8">
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35 }}
+                    className="flex items-center justify-center gap-0 mb-10"
+                >
                     {STEPS.map((s, i) => (
                         <div key={i} className="flex items-center">
-                            <div className={cn(
-                                "flex items-center justify-center w-9 h-9 rounded-full border-2 transition-all duration-300",
-                                i < step ? "border-blue-500 bg-blue-500 text-white" :
-                                    i === step ? "border-blue-500 bg-transparent text-blue-400" :
-                                        "border-white/20 bg-transparent text-white/30"
-                            )}>
-                                {i < step ? <CheckCircle2 className="w-4 h-4" /> : (
+                            <motion.div
+                                animate={{
+                                    scale: i === step ? 1.1 : 1,
+                                    borderColor: i < step ? "rgb(59, 130, 246)" : i === step ? "rgb(59, 130, 246)" : "rgba(255,255,255,0.15)",
+                                    backgroundColor: i < step ? "rgb(59, 130, 246)" : "transparent",
+                                }}
+                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                className={cn(
+                                    "flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors",
+                                    i < step ? "text-white" :
+                                        i === step ? "text-blue-400" :
+                                            "text-white/30"
+                                )}
+                            >
+                                {i < step ? <CheckCircle2 className="w-5 h-5" /> : (
                                     <span className="text-xs font-bold">{i + 1}</span>
                                 )}
-                            </div>
+                            </motion.div>
                             {i < STEPS.length - 1 && (
-                                <div className={cn("w-16 h-0.5 mx-1", i < step ? "bg-blue-500" : "bg-white/15")} />
-                            )}
-                        </div>
-                    ))}
-                </div>
-
-                {/* Card */}
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm shadow-2xl">
-                    <div className="flex items-center gap-3 mb-6">
-                        {(() => { const S = STEPS[step]; return <S.icon className="w-6 h-6 text-blue-400" />; })()}
-                        <div>
-                            <h2 className="text-xl font-display font-bold text-white">{STEPS[step].title}</h2>
-                            <p className="text-sm text-white/50">{STEPS[step].description}</p>
-                        </div>
-                    </div>
-
-                    {/* Step 0: Basic Info */}
-                    {step === 0 && (
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label className="text-white/80">Academic Year</Label>
-                                    <select
-                                        value={year}
-                                        onChange={(e) => setYear(e.target.value)}
-                                        className="w-full h-11 rounded-xl border border-white/20 bg-white/5 text-white px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    >
-                                        <option value="" className="bg-slate-900">Select year</option>
-                                        {YEAR_OPTIONS.map((y, i) => (
-                                            <option key={y} value={i + 1} className="bg-slate-900">{y}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label className="text-white/80">Branch / Major</Label>
-                                    <select
-                                        value={branch}
-                                        onChange={(e) => setBranch(e.target.value)}
-                                        className="w-full h-11 rounded-xl border border-white/20 bg-white/5 text-white px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    >
-                                        <option value="" className="bg-slate-900">Select branch</option>
-                                        {BRANCH_OPTIONS.map((b) => (
-                                            <option key={b} value={b} className="bg-slate-900">{b}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            {role === "STUDENT" && (
-                                <div className="space-y-2">
-                                    <Label className="text-white/80">Roll Number</Label>
-                                    <Input
-                                        placeholder="e.g. 21CS1001"
-                                        value={rollNumber}
-                                        onChange={(e) => setRollNumber(e.target.value)}
-                                        className="bg-white/5 border-white/20 text-white placeholder:text-white/30"
+                                <div className="relative w-20 h-0.5 mx-2 bg-white/10 rounded-full overflow-hidden">
+                                    <motion.div
+                                        animate={{ width: i < step ? "100%" : "0%" }}
+                                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
                                     />
                                 </div>
                             )}
-                            <div className="space-y-2">
-                                <Label className="text-white/80">Bio <span className="text-white/30">(optional)</span></Label>
-                                <textarea
-                                    placeholder="Tell us about yourself in 2-3 sentences..."
-                                    value={bio}
-                                    onChange={(e) => setBio(e.target.value)}
-                                    rows={3}
-                                    className="w-full rounded-xl border border-white/20 bg-white/5 text-white placeholder:text-white/30 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                                />
-                            </div>
-                            {role === "STUDENT" && (
-                                <label className="flex items-center gap-3 cursor-pointer">
-                                    <div
-                                        onClick={() => setIsHosteler(!isHosteler)}
+                        </div>
+                    ))}
+                </motion.div>
+
+                {/* Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl shadow-black/20"
+                >
+                    <div className="flex items-center gap-3 mb-8">
+                        <div className="w-11 h-11 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                            {(() => { const S = STEPS[step]; return <S.icon className="w-5 h-5 text-blue-400" />; })()}
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-display font-bold text-white">{STEPS[step].title}</h2>
+                            <p className="text-sm text-white/50 font-medium">{STEPS[step].description}</p>
+                        </div>
+                    </div>
+
+                    <AnimatePresence mode="wait" custom={direction}>
+                        {/* Step 0: Basic Info */}
+                        {step === 0 && (
+                            <motion.div
+                                key="step-0"
+                                custom={direction}
+                                variants={slideVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                                className="space-y-5"
+                            >
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label className="text-white/80 font-medium text-sm">Academic Year</Label>
+                                        <select
+                                            value={year}
+                                            onChange={(e) => setYear(e.target.value)}
+                                            className="w-full h-12 rounded-xl border border-white/15 bg-white/[0.04] text-white px-4 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm"
+                                        >
+                                            <option value="" className="bg-slate-900">Select year</option>
+                                            {YEAR_OPTIONS.map((y, i) => (
+                                                <option key={y} value={i + 1} className="bg-slate-900">{y}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-white/80 font-medium text-sm">Branch / Major</Label>
+                                        <select
+                                            value={branch}
+                                            onChange={(e) => setBranch(e.target.value)}
+                                            className="w-full h-12 rounded-xl border border-white/15 bg-white/[0.04] text-white px-4 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm"
+                                        >
+                                            <option value="" className="bg-slate-900">Select branch</option>
+                                            {BRANCH_OPTIONS.map((b) => (
+                                                <option key={b} value={b} className="bg-slate-900">{b}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                {role === "STUDENT" && (
+                                    <div className="space-y-2">
+                                        <Label className="text-white/80 font-medium text-sm">Roll Number</Label>
+                                        <Input
+                                            placeholder="e.g. 21CS1001"
+                                            value={rollNumber}
+                                            onChange={(e) => setRollNumber(e.target.value)}
+                                            className="h-12 bg-white/[0.04] border-white/15 text-white placeholder:text-white/25 focus-visible:ring-blue-500/50 rounded-xl"
+                                        />
+                                    </div>
+                                )}
+                                <div className="space-y-2">
+                                    <Label className="text-white/80 font-medium text-sm">Bio <span className="text-white/25">(optional)</span></Label>
+                                    <textarea
+                                        placeholder="Tell us about yourself in 2-3 sentences..."
+                                        value={bio}
+                                        onChange={(e) => setBio(e.target.value)}
+                                        rows={3}
+                                        className="w-full rounded-xl border border-white/15 bg-white/[0.04] text-white placeholder:text-white/25 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 resize-none transition-all"
+                                    />
+                                </div>
+                                {role === "STUDENT" && (
+                                    <label className="flex items-center gap-3 cursor-pointer group">
+                                        <div
+                                            onClick={() => setIsHosteler(!isHosteler)}
+                                            className={cn(
+                                                "w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200",
+                                                isHosteler ? "bg-blue-500 border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)]" : "border-white/25 bg-transparent group-hover:border-white/40"
+                                            )}
+                                        >
+                                            {isHosteler && <CheckCircle2 className="w-3 h-3 text-white" />}
+                                        </div>
+                                        <span className="text-white/70 text-sm font-medium">I live in the hostel</span>
+                                    </label>
+                                )}
+                            </motion.div>
+                        )}
+
+                        {/* Step 1: Skills */}
+                        {step === 1 && (
+                            <motion.div
+                                key="step-1"
+                                custom={direction}
+                                variants={slideVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                                className="space-y-5"
+                            >
+                                <div className="flex gap-2">
+                                    <Input
+                                        placeholder="Type a skill and press Enter..."
+                                        value={skillInput}
+                                        onChange={(e) => setSkillInput(e.target.value)}
+                                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addSkill(skillInput); } }}
+                                        className="h-12 bg-white/[0.04] border-white/15 text-white placeholder:text-white/25 focus-visible:ring-blue-500/50 rounded-xl"
+                                    />
+                                    <Button
+                                        type="button"
+                                        onClick={() => addSkill(skillInput)}
+                                        className="h-12 bg-blue-500/15 border border-blue-500/25 hover:bg-blue-500/25 text-blue-400 rounded-xl px-4"
+                                        variant="outline"
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                    </Button>
+                                </div>
+                                <AnimatePresence>
+                                    {skills.length > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="flex flex-wrap gap-2"
+                                        >
+                                            {skills.map((skill) => (
+                                                <motion.div
+                                                    key={skill}
+                                                    initial={{ opacity: 0, scale: 0.8 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    exit={{ opacity: 0, scale: 0.8 }}
+                                                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                                                >
+                                                    <Badge className="bg-blue-500/15 text-blue-300 border-blue-500/25 pr-1.5 flex items-center gap-1.5 py-1.5 px-3 rounded-lg font-medium">
+                                                        {skill}
+                                                        <button onClick={() => removeSkill(skill)} className="ml-0.5 hover:text-white transition-colors">
+                                                            <X className="w-3 h-3" />
+                                                        </button>
+                                                    </Badge>
+                                                </motion.div>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                                <div>
+                                    <p className="text-xs text-white/40 mb-3 font-medium flex items-center gap-1.5">
+                                        <Sparkles className="w-3 h-3" /> Suggestions
+                                    </p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {SKILL_SUGGESTIONS.filter((s) => !skills.includes(s)).map((s) => (
+                                            <motion.button
+                                                key={s}
+                                                onClick={() => addSkill(s)}
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className="text-xs border border-white/10 bg-white/[0.03] text-white/55 hover:text-white hover:bg-white/[0.07] hover:border-white/20 rounded-full px-3.5 py-1.5 transition-all font-medium"
+                                            >
+                                                + {s}
+                                            </motion.button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+
+                        {/* Step 2: Interests */}
+                        {step === 2 && (
+                            <motion.div
+                                key="step-2"
+                                custom={direction}
+                                variants={slideVariants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                                className="flex flex-wrap gap-3"
+                            >
+                                {INTEREST_OPTIONS.map((interest) => (
+                                    <motion.button
+                                        key={interest}
+                                        onClick={() => toggleInterest(interest)}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.92 }}
                                         className={cn(
-                                            "w-5 h-5 rounded border-2 flex items-center justify-center transition-colors",
-                                            isHosteler ? "bg-blue-500 border-blue-500" : "border-white/30 bg-transparent"
+                                            "px-5 py-2.5 rounded-xl border text-sm font-semibold transition-all duration-200",
+                                            interests.includes(interest)
+                                                ? "bg-blue-500/20 border-blue-500/40 text-blue-300 shadow-[0_0_15px_-5px_rgba(59,130,246,0.4)]"
+                                                : "bg-white/[0.03] border-white/10 text-white/55 hover:bg-white/[0.07] hover:text-white hover:border-white/20"
                                         )}
                                     >
-                                        {isHosteler && <CheckCircle2 className="w-3 h-3 text-white" />}
-                                    </div>
-                                    <span className="text-white/70 text-sm">I live in the hostel</span>
-                                </label>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Step 1: Skills */}
-                    {step === 1 && (
-                        <div className="space-y-4">
-                            <div className="flex gap-2">
-                                <Input
-                                    placeholder="Type a skill and press Enter..."
-                                    value={skillInput}
-                                    onChange={(e) => setSkillInput(e.target.value)}
-                                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addSkill(skillInput); } }}
-                                    className="bg-white/5 border-white/20 text-white placeholder:text-white/30 focus-visible:ring-blue-500"
-                                />
-                                <Button
-                                    type="button"
-                                    onClick={() => addSkill(skillInput)}
-                                    className="bg-blue-500/20 border border-blue-500/30 hover:bg-blue-500/30 text-blue-400"
-                                    variant="outline"
-                                >
-                                    <Plus className="w-4 h-4" />
-                                </Button>
-                            </div>
-                            {skills.length > 0 && (
-                                <div className="flex flex-wrap gap-2">
-                                    {skills.map((skill) => (
-                                        <Badge key={skill} className="bg-blue-500/20 text-blue-300 border-blue-500/30 pr-1 flex items-center gap-1">
-                                            {skill}
-                                            <button onClick={() => removeSkill(skill)} className="ml-1 hover:text-white">
-                                                <X className="w-3 h-3" />
-                                            </button>
-                                        </Badge>
-                                    ))}
-                                </div>
-                            )}
-                            <div>
-                                <p className="text-xs text-white/40 mb-2">Suggestions:</p>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {SKILL_SUGGESTIONS.filter((s) => !skills.includes(s)).map((s) => (
-                                        <button
-                                            key={s}
-                                            onClick={() => addSkill(s)}
-                                            className="text-xs border border-white/15 bg-white/5 text-white/60 hover:text-white hover:bg-white/10 rounded-full px-3 py-1 transition-colors"
-                                        >
-                                            + {s}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Step 2: Interests */}
-                    {step === 2 && (
-                        <div className="flex flex-wrap gap-2">
-                            {INTEREST_OPTIONS.map((interest) => (
-                                <button
-                                    key={interest}
-                                    onClick={() => toggleInterest(interest)}
-                                    className={cn(
-                                        "px-4 py-2 rounded-xl border text-sm font-medium transition-all duration-150",
-                                        interests.includes(interest)
-                                            ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
-                                            : "bg-white/5 border-white/15 text-white/60 hover:bg-white/10 hover:text-white"
-                                    )}
-                                >
-                                    {interests.includes(interest) && "✓ "}{interest}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                                        {interests.includes(interest) && "✓ "}{interest}
+                                    </motion.button>
+                                ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     {/* Navigation */}
-                    <div className="flex justify-between mt-8">
+                    <div className="flex justify-between mt-10 pt-6 border-t border-white/5">
                         <Button
                             variant="outline"
-                            onClick={() => setStep(s => (s - 1) as typeof step)}
+                            onClick={goBack}
                             disabled={step === 0}
-                            className="border-white/20 text-white/60 bg-transparent hover:bg-white/5"
+                            className="border-white/15 text-white/60 bg-transparent hover:bg-white/[0.05] hover:text-white rounded-xl h-12 px-6 font-medium disabled:opacity-30"
                         >
                             Back
                         </Button>
                         {step < STEPS.length - 1 ? (
-                            <Button
-                                onClick={() => setStep(s => (s + 1) as typeof step)}
-                                disabled={!canProceed()}
-                                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white flex items-center gap-2"
+                            <motion.div
+                                animate={canProceed() ? { scale: [1, 1.03, 1] } : {}}
+                                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                             >
-                                Continue <ChevronRight className="w-4 h-4" />
-                            </Button>
+                                <Button
+                                    onClick={goNext}
+                                    disabled={!canProceed()}
+                                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center gap-2 rounded-xl h-12 px-6 font-semibold hover:shadow-[0_0_30px_-8px_rgba(59,130,246,0.5)] transition-shadow disabled:opacity-40"
+                                >
+                                    Continue <ChevronRight className="w-4 h-4" />
+                                </Button>
+                            </motion.div>
                         ) : (
                             <Button
                                 onClick={handleComplete}
                                 disabled={loading || !canProceed()}
-                                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl h-12 px-6 font-semibold hover:shadow-[0_0_30px_-8px_rgba(59,130,246,0.5)] transition-shadow disabled:opacity-40"
                             >
                                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Complete Setup 🎉"}
                             </Button>
                         )}
                     </div>
-                </div>
+                </motion.div>
 
-                <p className="text-center text-white/30 text-xs mt-4">
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-center text-white/25 text-xs mt-6 font-medium"
+                >
                     Step {step + 1} of {STEPS.length} · You can update this anytime from your profile
-                </p>
-            </div>
+                </motion.p>
+            </motion.div>
         </div>
     );
 }

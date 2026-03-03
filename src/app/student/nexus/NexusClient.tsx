@@ -1,17 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { MessageSquare, Users, Bell, Search, Star, MoreVertical, Send, UserPlus, CheckCircle2, Clock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageSquare, Users, Bell, Search, Star, UserPlus, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn, getInitials, generateAvatarColor, timeAgo, parseJsonArray } from "@/lib/utils";
 
 const TABS = [
-    { id: "messages", label: "Messages", icon: MessageSquare },
     { id: "network", label: "Network", icon: Users },
+    { id: "messages", label: "Messages", icon: MessageSquare },
     { id: "notifications", label: "Alerts", icon: Bell },
 ];
+
+const fadeInUp = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } }
+};
+
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
+};
 
 export default function NexusClient({ initialConnections, initialNotifications, currentUser }: any) {
     const [activeTab, setActiveTab] = useState("network");
@@ -24,147 +36,213 @@ export default function NexusClient({ initialConnections, initialNotifications, 
     return (
         <div className="h-[calc(100vh-4rem)] lg:h-screen flex flex-col bg-background">
             {/* Header */}
-            <div className="px-6 py-4 border-b bg-card z-10 sticky top-0">
-                <h1 className="text-2xl font-display font-bold">Nexus</h1>
-                <p className="text-sm text-muted-foreground">Your campus network and communications</p>
+            <div className="px-6 py-5 border-b border-border/50 bg-card/50 backdrop-blur-xl z-20 sticky top-0 shadow-sm">
+                <div className="max-w-6xl mx-auto">
+                    <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+                        <h1 className="text-2xl font-display font-bold tracking-tight">Nexus</h1>
+                        <p className="text-sm text-muted-foreground font-medium mt-0.5">Your campus network and communications</p>
+                    </motion.div>
 
-                <div className="flex gap-2 mt-4 overflow-x-auto scrollbar-hide">
-                    {TABS.map(tab => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={cn(
-                                "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all flex-shrink-0",
-                                activeTab === tab.id
-                                    ? "bg-primary text-primary-foreground shadow-sm"
-                                    : "bg-muted text-muted-foreground hover:text-foreground"
-                            )}
-                        >
-                            <tab.icon className="w-4 h-4" />
-                            {tab.label}
-                            {tab.id === "notifications" && initialNotifications.filter((n: any) => !n.isRead).length > 0 && (
-                                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse ml-1" />
-                            )}
-                        </button>
-                    ))}
+                    <nav className="flex gap-2 mt-5 overflow-x-auto scrollbar-hide pb-1">
+                        {TABS.map(tab => {
+                            const unreadCount = tab.id === "notifications" ? initialNotifications.filter((n: any) => !n.isRead).length : 0;
+                            const isActive = activeTab === tab.id;
+
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className="relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all flex-shrink-0 group"
+                                >
+                                    {isActive && (
+                                        <motion.div
+                                            layoutId="activeTabIndicator"
+                                            className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-xl"
+                                            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                        />
+                                    )}
+                                    <span className={cn("relative z-10 flex items-center gap-2", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}>
+                                        <tab.icon className={cn("w-4 h-4", isActive && "fill-primary/20")} />
+                                        {tab.label}
+                                        {unreadCount > 0 && (
+                                            <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-red-500/10 border border-red-500/20 text-[10px] text-red-500 font-bold ml-1">
+                                                {unreadCount}
+                                            </span>
+                                        )}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </nav>
                 </div>
             </div>
 
-            <div className="flex-1 overflow-hidden relative">
+            <div className="flex-1 overflow-hidden relative bg-accent/10">
+                <AnimatePresence mode="wait">
+                    {/* Network Tab */}
+                    {activeTab === "network" && (
+                        <motion.div
+                            key="network"
+                            variants={fadeInUp}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="h-full overflow-y-auto p-6 max-w-6xl mx-auto w-full"
+                        >
+                            <div className="relative mb-8 max-w-md mx-auto sm:mx-0">
+                                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search by name, skills, or branch..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="pl-10 h-12 bg-card border-border/50 shadow-sm rounded-xl font-medium focus-visible:ring-primary"
+                                />
+                            </div>
 
-                {/* Network Tab */}
-                {activeTab === "network" && (
-                    <div className="h-full overflow-y-auto p-6 max-w-5xl mx-auto space-y-6">
-                        <div className="relative mb-6">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Find students, alumni, faculty..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="pl-9 h-11 bg-card border-border shadow-sm rounded-xl max-w-md"
-                            />
-                        </div>
+                            <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                                {filteredConnections.map((user: any) => (
+                                    <motion.div key={user.id} variants={fadeInUp} className="group bg-card border border-border/50 rounded-2xl p-5 flex flex-col hover:shadow-lg hover:border-border transition-all duration-300">
+                                        <div className="flex items-start justify-between gap-3 mb-4">
+                                            <div className="w-14 h-14 rounded-2xl overflow-hidden flex-shrink-0 shadow-sm border border-border/50 group-hover:scale-105 transition-transform">
+                                                {user.image ? (
+                                                    <img src={user.image} className="w-full h-full object-cover" alt="" />
+                                                ) : (
+                                                    <div className={`w-full h-full ${generateAvatarColor(user.name || "")} flex items-center justify-center text-white text-lg font-bold`}>
+                                                        {getInitials(user.name || "?")}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {user.studentProfile?.availabilityStatus === "LOOKING_FOR_TEAM" && (
+                                                <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[10px] px-2 py-0.5 h-6 font-semibold">
+                                                    Seeking Team
+                                                </Badge>
+                                            )}
+                                        </div>
 
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {filteredConnections.map((user: any) => (
-                                <div key={user.id} className="nexus-card p-4 flex flex-col hover:border-primary/30 transition-all group">
-                                    <div className="flex items-start justify-between gap-3 mb-3">
-                                        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-background shadow-sm">
-                                            {user.image ? (
-                                                <img src={user.image} className="w-full h-full object-cover" alt="" />
-                                            ) : (
-                                                <div className={`w-full h-full ${generateAvatarColor(user.name || "")} flex items-center justify-center text-white text-sm font-bold`}>
-                                                    {getInitials(user.name || "?")}
+                                        <div className="flex-1">
+                                            <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">{user.name}</h3>
+                                            <p className="text-xs text-muted-foreground font-medium mb-3">
+                                                {user.studentProfile?.branch || "Unknown Branch"} · Year {user.studentProfile?.year || "-"}
+                                            </p>
+                                            {user.studentProfile?.skills && (
+                                                <div className="flex flex-wrap gap-1.5 mt-1 mb-5">
+                                                    {parseJsonArray(user.studentProfile.skills).slice(0, 3).map(skill => (
+                                                        <span key={skill} className="text-[10px] bg-accent border border-border/50 text-accent-foreground px-2 py-1 rounded-md flex items-center gap-1 font-medium">
+                                                            <Star className="w-2.5 h-2.5 opacity-50 text-amber-500" /> {skill}
+                                                        </span>
+                                                    ))}
                                                 </div>
                                             )}
                                         </div>
-                                        {user.studentProfile?.availabilityStatus === "LOOKING_FOR_TEAM" && (
-                                            <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-200 text-[10px] px-1.5 py-0 h-5">
-                                                Seeking Team
-                                            </Badge>
-                                        )}
-                                    </div>
 
-                                    <div className="flex-1">
-                                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">{user.name}</h3>
-                                        <p className="text-xs text-muted-foreground mb-2">
-                                            {user.studentProfile?.branch} · Year {user.studentProfile?.year}
-                                        </p>
-                                        {user.studentProfile?.skills && (
-                                            <div className="flex flex-wrap gap-1 mt-1 mb-4">
-                                                {parseJsonArray(user.studentProfile.skills).slice(0, 3).map(skill => (
-                                                    <span key={skill} className="text-[10px] bg-accent text-accent-foreground px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                                                        <Star className="w-2.5 h-2.5 opacity-50" /> {skill}
-                                                    </span>
-                                                ))}
+                                        <Button className="w-full mt-auto rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 font-semibold transition-colors">
+                                            <UserPlus className="w-4 h-4 mr-2" /> Connect
+                                        </Button>
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+                        </motion.div>
+                    )}
+
+                    {/* Messages Tab MVP Placeholder */}
+                    {activeTab === "messages" && (
+                        <motion.div
+                            key="messages"
+                            variants={fadeInUp}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="h-full flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x border-t border-border/50 bg-card w-full max-w-6xl mx-auto"
+                        >
+                            <div className="w-full lg:w-80 flex flex-col h-full bg-muted/10 border-r border-border/50">
+                                <div className="p-4 border-b border-border/50">
+                                    <Input placeholder="Search messages..." className="h-10 bg-background rounded-xl border-border/50" />
+                                </div>
+                                <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
+                                    <div className="p-3.5 rounded-xl bg-primary/5 cursor-pointer border border-primary/20 hover:bg-primary/10 transition-colors">
+                                        <div className="flex justify-between items-center mb-1.5">
+                                            <span className="font-semibold text-sm">Robotics Club Team</span>
+                                            <span className="text-[10px] text-primary font-medium">12m</span>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground truncate font-medium">Hey! Are we still meeting for the chassis build?</p>
+                                    </div>
+                                    <div className="p-3.5 rounded-xl cursor-pointer border border-transparent hover:bg-accent/40 transition-colors">
+                                        <div className="flex justify-between items-center mb-1.5">
+                                            <span className="font-semibold text-sm">Alex Johnson</span>
+                                            <span className="text-[10px] text-muted-foreground font-medium">1d</span>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground truncate">Thanks for the hackathon tips!</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex-1 flex flex-col h-full bg-background relative">
+                                <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
+                                    <div className="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center mb-4 border border-border/50">
+                                        <MessageSquare className="w-8 h-8 opacity-40" />
+                                    </div>
+                                    <p className="text-base font-semibold text-foreground">Select a conversation</p>
+                                    <p className="text-sm mt-1">Or start a new chat with a connection</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* Notifications Tab */}
+                    {activeTab === "notifications" && (
+                        <motion.div
+                            key="notifications"
+                            variants={fadeInUp}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            className="h-full overflow-y-auto p-6 max-w-3xl mx-auto w-full"
+                        >
+                            <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-3">
+                                {initialNotifications.length === 0 ? (
+                                    <div className="text-center py-24 text-muted-foreground">
+                                        <div className="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center mx-auto mb-4 border border-border/50">
+                                            <Bell className="w-8 h-8 opacity-40" />
+                                        </div>
+                                        <p className="font-semibold text-foreground">You&apos;re all caught up!</p>
+                                        <p className="text-sm mt-1">No new notifications right now.</p>
+                                    </div>
+                                ) : (
+                                    initialNotifications.map((notif: any, i: number) => (
+                                        <motion.div
+                                            key={notif.id}
+                                            variants={fadeInUp}
+                                            className={cn(
+                                                "group p-5 rounded-2xl flex gap-4 transition-all cursor-pointer border",
+                                                !notif.isRead
+                                                    ? "bg-primary/5 border-primary/20 shadow-[0_4px_24px_-10px_rgba(59,130,246,0.1)] hover:bg-primary/10"
+                                                    : "bg-card border-border/50 hover:bg-accent/40 hover:border-border"
+                                            )}
+                                        >
+                                            <div className={cn(
+                                                "w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+                                                !notif.isRead ? "bg-primary/10 text-primary" : "bg-accent text-muted-foreground"
+                                            )}>
+                                                {notif.type === "EVENT_UPDATE" ? <Bell className="w-5 h-5" /> : <MessageSquare className="w-5 h-5" />}
                                             </div>
-                                        )}
-                                    </div>
-
-                                    <Button className="w-full mt-auto" variant="secondary" size="sm">
-                                        <UserPlus className="w-3.5 h-3.5 mr-1.5" /> Connect
-                                    </Button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* Messages Tab MVP Placeholder */}
-                {activeTab === "messages" && (
-                    <div className="h-full flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x border-t border-border bg-card">
-                        <div className="w-full lg:w-80 flex flex-col h-full bg-muted/20">
-                            <div className="p-4 border-b border-border">
-                                <Input placeholder="Search messages..." className="h-9" />
-                            </div>
-                            <div className="flex-1 overflow-y-auto p-2 space-y-1">
-                                <div className="p-3 rounded-xl bg-accent cursor-pointer border border-transparent">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="font-medium text-sm">Robotics Club Team</span>
-                                        <span className="text-[10px] text-muted-foreground">12m</span>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground truncate">Hey! Are we still meeting for the chassis build?</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex-1 flex flex-col h-full bg-background relative">
-                            <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
-                                <MessageSquare className="w-12 h-12 mb-3 opacity-20" />
-                                <p className="text-sm font-medium">Select a conversation</p>
-                                <p className="text-xs">Or start a new chat with a connection</p>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Notifications Tab */}
-                {activeTab === "notifications" && (
-                    <div className="h-full overflow-y-auto p-6 max-w-3xl mx-auto space-y-2">
-                        {initialNotifications.length === 0 ? (
-                            <div className="text-center py-20 text-muted-foreground">
-                                <Bell className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                                <p>You&apos;re all caught up!</p>
-                            </div>
-                        ) : (
-                            initialNotifications.map((notif: any) => (
-                                <div key={notif.id} className={cn("nexus-card p-4 flex gap-4 transition-colors cursor-pointer", !notif.isRead ? "bg-primary/5 border-primary/20" : "")}>
-                                    <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center flex-shrink-0 text-muted-foreground">
-                                        {notif.type === "EVENT_UPDATE" ? <Bell className="w-4 h-4" /> : <MessageSquare className="w-4 h-4" />}
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="text-sm font-medium text-foreground mb-0.5">{notif.title}</p>
-                                        <p className="text-sm text-muted-foreground">{notif.content}</p>
-                                        <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                                            <Clock className="w-3 h-3" /> {timeAgo(notif.createdAt)}
-                                        </p>
-                                    </div>
-                                    {!notif.isRead && <div className="w-2 h-2 rounded-full bg-primary mt-2" />}
-                                </div>
-                            ))
-                        )}
-                    </div>
-                )}
-
+                                            <div className="flex-1 pt-0.5">
+                                                <p className="text-sm font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">{notif.title}</p>
+                                                <p className="text-sm text-muted-foreground leading-relaxed">{notif.content}</p>
+                                                <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5 font-medium">
+                                                    <Clock className="w-3.5 h-3.5 opacity-70" /> {timeAgo(notif.createdAt)}
+                                                </p>
+                                            </div>
+                                            {!notif.isRead && (
+                                                <div className="flex-shrink-0 pt-2">
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_2px_rgba(59,130,246,0.5)]" />
+                                                </div>
+                                            )}
+                                        </motion.div>
+                                    ))
+                                )}
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );

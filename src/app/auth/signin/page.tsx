@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Zap, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,41 +51,79 @@ function SignInForm() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 flex items-center justify-center p-4">
-            {/* Background orbs */}
-            <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden selection:bg-blue-500/30 selection:text-blue-200">
+            {/* Animated background */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,_rgba(37,99,235,0.12)_0%,_transparent_50%)]" />
+                <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,_rgba(147,51,234,0.12)_0%,_transparent_50%)]" />
+                <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-600/15 rounded-full blur-[120px] animate-blob mix-blend-screen" />
+                <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-purple-600/15 rounded-full blur-[120px] animate-blob animation-delay-2000 mix-blend-screen" />
+            </div>
 
-            <div className="relative w-full max-w-md space-y-6">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="relative z-10 w-full max-w-md space-y-6"
+            >
                 {/* Logo */}
                 <div className="text-center">
-                    <Link href="/" className="inline-flex items-center gap-2 mb-6">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                            <Zap className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="text-2xl font-display font-bold text-white">Campus Nexus</span>
-                    </Link>
-                    <h1 className="text-3xl font-display font-bold text-white mb-2">Welcome back</h1>
-                    <p className="text-white/50">Sign in to your campus account</p>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.1 }}
+                    >
+                        <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
+                                <Zap className="w-5 h-5 text-white" />
+                            </div>
+                            <span className="text-2xl font-display font-bold text-white">Campus Nexus</span>
+                        </Link>
+                    </motion.div>
+                    <motion.h1
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-3xl md:text-4xl font-display font-bold text-white mb-3 tracking-tight"
+                    >
+                        Welcome back
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-white/50 font-medium"
+                    >
+                        Sign in to your campus account
+                    </motion.p>
                 </div>
 
                 {/* Error banner */}
                 {error && (
-                    <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-center text-red-400 text-sm">
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-center text-red-400 text-sm font-medium"
+                    >
                         {error === "AccessDenied"
                             ? "Access denied. Your account may be pending verification."
                             : "Something went wrong. Please try again."}
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* Card */}
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm shadow-2xl">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35 }}
+                    className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl shadow-black/20"
+                >
                     {/* Google OAuth */}
                     {process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID && (
                         <Button
                             type="button"
                             variant="outline"
-                            className="w-full mb-6 bg-white/5 border-white/20 text-white hover:bg-white/10"
+                            className="w-full mb-6 bg-white/[0.04] border-white/15 text-white hover:bg-white/[0.07] rounded-xl h-12 font-medium"
                             onClick={handleGoogle}
                             disabled={googleLoading}
                         >
@@ -107,25 +146,25 @@ function SignInForm() {
                             <span className="w-full border-t border-white/10" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-transparent px-2 text-white/40">or sign in with email</span>
+                            <span className="bg-transparent px-3 text-white/30 font-medium">or sign in with email</span>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <div className="space-y-2">
-                            <Label htmlFor="email" className="text-white/80">Email</Label>
+                            <Label htmlFor="email" className="text-white/80 font-medium text-sm">Email</Label>
                             <Input
                                 id="email"
                                 type="email"
                                 placeholder="you@college.edu"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="bg-white/5 border-white/20 text-white placeholder:text-white/30 focus-visible:ring-blue-500"
+                                className="h-12 bg-white/[0.04] border-white/15 text-white placeholder:text-white/25 focus-visible:ring-blue-500/50 rounded-xl"
                                 required
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="password" className="text-white/80">Password</Label>
+                            <Label htmlFor="password" className="text-white/80 font-medium text-sm">Password</Label>
                             <div className="relative">
                                 <Input
                                     id="password"
@@ -133,13 +172,13 @@ function SignInForm() {
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="bg-white/5 border-white/20 text-white placeholder:text-white/30 focus-visible:ring-blue-500 pr-10"
+                                    className="h-12 bg-white/[0.04] border-white/15 text-white placeholder:text-white/25 focus-visible:ring-blue-500/50 pr-10 rounded-xl"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
@@ -148,21 +187,26 @@ function SignInForm() {
 
                         <Button
                             type="submit"
-                            className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/25"
+                            className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-[0_0_30px_-8px_rgba(59,130,246,0.5)] transition-shadow"
                             disabled={loading}
                         >
                             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
                         </Button>
                     </form>
-                </div>
+                </motion.div>
 
-                <p className="text-center text-white/50 text-sm">
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-center text-white/40 text-sm font-medium"
+                >
                     Don&apos;t have an account?{" "}
-                    <Link href="/auth/signup" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                    <Link href="/auth/signup" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
                         Create one
                     </Link>
-                </p>
-            </div>
+                </motion.p>
+            </motion.div>
         </div>
     );
 }

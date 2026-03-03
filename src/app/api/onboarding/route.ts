@@ -11,7 +11,7 @@ const studentOnboardingSchema = z.object({
     bio: z.string().optional(),
     skills: z.array(z.string()),
     interests: z.array(z.string()),
-    availability: z.enum(["OPEN", "BUSY", "LOOKING_FOR_TEAM"]),
+    availability: z.enum(["OPEN", "BUSY", "LOOKING_FOR_TEAM"]).optional().default("OPEN"),
 });
 
 export async function POST(req: NextRequest) {
@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
         if (role === "STUDENT") {
             const parsed = studentOnboardingSchema.safeParse(data);
             if (!parsed.success) {
+                console.error("Onboarding validation error:", parsed.error.issues);
                 return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
             }
             const { rollNumber, branch, year, isHosteler, bio, skills, interests, availability } = parsed.data;
