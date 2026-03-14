@@ -4,32 +4,195 @@ export default function Home() {
   return (
     <div className="mobile-stack" style={{ display: 'flex', gap: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
       {/* Left Sidebar */}
-      <aside className="mobile-sidebar-left" style={{ width: '240px', flexShrink: 0, flexDirection: 'column', gap: '2rem' }}>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
-            <HomeIcon size={18} /> Home Feed
-          </a>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
-            <Calendar size={18} /> My Schedule
-          </a>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
-            <Users size={18} /> Joined Teams
-          </a>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
-            <Bookmark size={18} /> Saved Items
-          </a>
-        </nav>
-
-        <div>
-          <h4 style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em', marginBottom: '1rem', paddingLeft: '1rem' }}>Your Clubs</h4>
+      <aside
+        className="mobile-sidebar-left"
+        style={{
+          width: '280px',
+          flexShrink: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.75rem',
+        }}
+      >
+        <div
+          className="card"
+          style={{
+            padding: '1rem 0.75rem',
+            border: 'none',
+            boxShadow: 'var(--shadow-sm)',
+          }}
+        >
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-            <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 1rem', color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
-              <div style={{ width: '1.75rem', height: '1.75rem', borderRadius: 'var(--radius-sm)', backgroundColor: '#E0E7FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', fontWeight: 'bold', fontSize: '0.65rem' }}>AC</div>
-              <span>ACM Chapter</span>
+            <a
+              href="#"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '0.55rem 0.75rem',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: 'var(--primary-light)',
+                color: 'var(--primary)',
+                textDecoration: 'none',
+                fontWeight: 600,
+                fontSize: '0.9rem',
+              }}
+            >
+              <HomeIcon size={16} /> Home Feed
             </a>
-            <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 1rem', color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
-              <div style={{ width: '1.75rem', height: '1.75rem', borderRadius: 'var(--radius-sm)', backgroundColor: '#D1FAE5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#059669', fontWeight: 'bold', fontSize: '0.65rem' }}>WB</div>
-              <span>WebDev Hub</span>
+            <a
+              href="#"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '0.55rem 0.75rem',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--text-muted)',
+                textDecoration: 'none',
+                fontWeight: 500,
+                fontSize: '0.9rem',
+              }}
+              className="btn-ghost"
+            >
+              <Calendar size={16} /> My Schedule
+            </a>
+            <a
+              href="#"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '0.55rem 0.75rem',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--text-muted)',
+                textDecoration: 'none',
+                fontWeight: 500,
+                fontSize: '0.9rem',
+              }}
+              className="btn-ghost"
+            >
+              <Users size={16} /> Joined Teams
+            </a>
+            <a
+              href="#"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '0.55rem 0.75rem',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--text-muted)',
+                textDecoration: 'none',
+                fontWeight: 500,
+                fontSize: '0.9rem',
+              }}
+              className="btn-ghost"
+            >
+              <Bookmark size={16} /> Saved Items
+            </a>
+          </nav>
+        </div>
+
+        <div className="card" style={{ padding: '1rem 0.75rem', border: 'none', boxShadow: 'var(--shadow-sm)' }}>
+          <h4
+            style={{
+              fontSize: '0.75rem',
+              textTransform: 'uppercase',
+              color: 'var(--text-muted)',
+              letterSpacing: '0.08em',
+              margin: '0 0 0.75rem 0',
+            }}
+          >
+            Your clubs
+          </h4>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            <a
+              href="#"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '0.45rem 0.6rem',
+                borderRadius: 'var(--radius-md)',
+                textDecoration: 'none',
+                color: 'var(--text-main)',
+                fontWeight: 500,
+                fontSize: '0.85rem',
+              }}
+              className="btn-ghost"
+            >
+              <div
+                style={{
+                  width: '1.9rem',
+                  height: '1.9rem',
+                  borderRadius: 'var(--radius-sm)',
+                  backgroundColor: '#E0E7FF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--primary)',
+                  fontWeight: 'bold',
+                  fontSize: '0.7rem',
+                }}
+              >
+                AC
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>ACM Chapter</span>
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    color: 'var(--text-muted)',
+                  }}
+                >
+                  Tech • 125 members
+                </span>
+              </div>
+            </a>
+
+            <a
+              href="#"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                padding: '0.45rem 0.6rem',
+                borderRadius: 'var(--radius-md)',
+                textDecoration: 'none',
+                color: 'var(--text-main)',
+                fontWeight: 500,
+                fontSize: '0.85rem',
+              }}
+              className="btn-ghost"
+            >
+              <div
+                style={{
+                  width: '1.9rem',
+                  height: '1.9rem',
+                  borderRadius: 'var(--radius-sm)',
+                  backgroundColor: '#D1FAE5',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#059669',
+                  fontWeight: 'bold',
+                  fontSize: '0.7rem',
+                }}
+              >
+                WB
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>WebDev Hub</span>
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    color: 'var(--text-muted)',
+                  }}
+                >
+                  Projects • 80 members
+                </span>
+              </div>
             </a>
           </nav>
         </div>

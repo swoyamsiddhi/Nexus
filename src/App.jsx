@@ -6,6 +6,7 @@ import Projects from './pages/Projects';
 import Teams from './pages/Teams';
 import Skills from './pages/Skills';
 import EventDetail from './pages/EventDetail';
+import ProjectDetail from './pages/ProjectDetail';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="events/:id" element={<EventDetail />} />
         <Route path="teams" element={<Teams />} />
         <Route path="projects" element={<Projects />} />
+        <Route path="projects/:id" element={<ProjectDetail />} />
         <Route path="skills" element={<Skills />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

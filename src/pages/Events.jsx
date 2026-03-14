@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, MapPin, ChevronDown, ChevronRight, Bookmark, Users, Navigation, Flame, Clock, Navigation2, Zap, Trophy, Heart } from 'lucide-react';
+import { Plus, Calendar, MapPin, ChevronDown, ChevronRight, Bookmark, Users, Navigation, Flame, Clock, Navigation2, Zap, Trophy, Heart, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Events() {
@@ -113,6 +113,7 @@ export default function Events() {
         </div>
 
         {/* FEED SECTIONS */}
+        {activeTab === 'campus' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
           
           {/* HAPPENING NOW / TODAY */}
@@ -297,6 +298,254 @@ export default function Events() {
           </div>
 
         </div>
+        )}
+
+        {activeTab === 'external' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', paddingBottom: '3rem' }}>
+            {/* External Page Header */}
+            <section>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
+                <div>
+                  <h2 style={{ fontSize: '1.75rem', margin: 0, letterSpacing: '-0.02em' }}>🌐 Beyond Campus</h2>
+                  <p style={{ marginTop: '0.4rem', color: 'var(--text-muted)', maxWidth: '520px', fontSize: '0.95rem' }}>
+                    Discover hackathons, conferences, and meetups happening in your city. Find SRMites going and attend together.
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <button className="btn btn-primary" style={{ fontSize: '0.9rem' }}>+ Share External Event</button>
+                  <button className="btn btn-outline" style={{ fontSize: '0.9rem' }}>My External Activity</button>
+                </div>
+              </div>
+            </section>
+
+            {/* Location Selector */}
+            <section className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem' }}>
+                  <Navigation2 size={16} color="var(--primary)" /> 
+                  <span>Showing events near:</span>
+                </div>
+                <button className="btn-ghost" style={{ fontSize: '0.85rem' }}>Use my current location</button>
+              </div>
+
+              <div className="responsive-grid-sm">
+                {[
+                  { city: 'Chennai', active: true, count: 12 },
+                  { city: 'Bangalore', active: false, count: 8 },
+                  { city: 'Hyderabad', active: false, count: 5 },
+                  { city: 'Pune', active: false, count: 3 },
+                  { city: 'Online', active: false, count: 15 },
+                ].map((c) => (
+                  <button
+                    key={c.city}
+                    className="card"
+                    style={{
+                      padding: '0.9rem 1rem',
+                      borderRadius: 'var(--radius-lg)',
+                      textAlign: 'left',
+                      border: c.active ? '1.5px solid var(--primary)' : '1px solid var(--border-color)',
+                      backgroundColor: c.active ? 'var(--primary-light)' : 'white',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+                      <span style={{ fontWeight: 600 }}>{c.city}</span>
+                      {c.active && <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--primary)' }} />}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{c.count} events</div>
+                  </button>
+                ))}
+                <button
+                  className="card"
+                  style={{
+                    padding: '0.9rem 1rem',
+                    borderRadius: 'var(--radius-lg)',
+                    textAlign: 'left',
+                    border: '1px dashed var(--border-color)',
+                    backgroundColor: 'var(--bg-color)',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem',
+                    color: 'var(--text-muted)',
+                  }}
+                >
+                  + Add new city
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginTop: '0.5rem', fontSize: '0.85rem' }}>
+                <span style={{ color: 'var(--text-muted)' }}>Radius:</span>
+                {['Within 10km', '10-50km', '50km+', 'Any distance'].map((r, i) => (
+                  <button
+                    key={r}
+                    style={{
+                      padding: '0.3rem 0.7rem',
+                      borderRadius: '999px',
+                      border: i === 0 ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                      backgroundColor: i === 0 ? 'var(--primary-light)' : 'white',
+                      fontSize: '0.8rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {/* Secondary Filters */}
+            <section className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: '220px', position: 'relative' }}>
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="Search external events..."
+                    style={{ paddingLeft: '2.4rem', borderRadius: 'var(--radius-full)' }}
+                  />
+                  <Search
+                    size={16}
+                    style={{
+                      position: 'absolute',
+                      left: '0.9rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: 'var(--text-muted)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="responsive-grid-sm">
+                <div className="form-group">
+                  <label>Event Type</label>
+                  <select className="input">
+                    <option>All</option>
+                    <option>Hackathon</option>
+                    <option>Conference</option>
+                    <option>Workshop</option>
+                    <option>Meetup</option>
+                    <option>Competition</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Date</label>
+                  <select className="input">
+                    <option>Anytime</option>
+                    <option>This Weekend</option>
+                    <option>This Month</option>
+                    <option>Next 3 Months</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Cost</label>
+                  <select className="input">
+                    <option>Any</option>
+                    <option>Free only</option>
+                    <option>Under ₹500</option>
+                    <option>Paid</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>SRM Group Status</label>
+                  <select className="input">
+                    <option>Any</option>
+                    <option>Has SRM group</option>
+                    <option>Need 5+ SRMites</option>
+                    <option>Friends going</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', fontSize: '0.8rem', marginTop: '0.75rem' }}>
+                {['🚗 Can offer ride', '🏠 Need accommodation', '🎓 Beginner-friendly', '🏆 Has prizes'].map((chip) => (
+                  <button
+                    key={chip}
+                    style={{
+                      padding: '0.3rem 0.8rem',
+                      borderRadius: '999px',
+                      border: '1px solid var(--border-color)',
+                      backgroundColor: 'var(--bg-color)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {/* Quick stats */}
+            <section className="card" style={{ padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', backgroundColor: 'var(--primary-light)' }}>
+              <div style={{ fontSize: '0.9rem', color: 'var(--primary)' }}>
+                <strong>This month:</strong> 45 external events • 12 SRM groups formed • 234 SRMites attending
+              </div>
+              <button className="btn btn-outline" style={{ fontSize: '0.85rem' }}>View activity map →</button>
+            </section>
+
+            {/* Trending / Sections (skeleton) */}
+            <section>
+              <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                🔥 Trending near you (Chennai)
+              </h3>
+              <p style={{ marginTop: 0, marginBottom: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                Most SRMites interested this week
+              </p>
+              <div className="responsive-grid">
+                <div className="card" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ width: '96px', height: '96px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-color)' }} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h4 style={{ margin: 0, fontSize: '1rem' }}>DevFest Chennai 2024</h4>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>By Google Developer Groups</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.4rem', display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                        <span>📅 March 25, 2024 • 9:00 AM</span>
+                        <span>📍 Chennai Trade Center, Nandanam</span>
+                        <span>🎟️ Free registration</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: '0.6rem', padding: '0.6rem 0.75rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--bg-color)', fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                    <strong>SRM Connect</strong>
+                    <span>🔥 45 interested • 12 going</span>
+                    <span>🚗 3 offering ride • 🏠 2 need accommodation</span>
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.4rem' }}>
+                    <button className="btn btn-outline" style={{ fontSize: '0.8rem' }}>Interested</button>
+                    <button className="btn btn-primary" style={{ fontSize: '0.8rem' }}>Going</button>
+                    <button className="btn btn-outline" style={{ fontSize: '0.8rem' }}>Offer Ride</button>
+                    <button className="btn btn-outline" style={{ fontSize: '0.8rem' }}>Join SRM Group Chat</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h3 style={{ fontSize: '1.1rem', marginBottom: '0.6rem' }}>📅 This weekend</h3>
+              <div className="responsive-grid-sm">
+                <div className="card" style={{ padding: '1rem', fontSize: '0.9rem' }}>
+                  <div style={{ fontWeight: 600 }}>UX Design Workshop</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.2rem' }}>
+                    By DesignUp • March 16 • 10:00 AM
+                  </div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.2rem' }}>
+                    📍 IIT Madras Research Park
+                  </div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.4rem' }}>
+                    👥 SRM Group: 8 interested • 3 going
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.6rem' }}>
+                    <button className="btn btn-outline" style={{ fontSize: '0.8rem' }}>Interested</button>
+                    <button className="btn btn-primary" style={{ fontSize: '0.8rem' }}>Going</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <div style={{ textAlign: 'center', paddingTop: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+              <button className="btn btn-outline" style={{ fontSize: '0.85rem' }}>Load more events</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
