@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Network, Search, Bell, MessageSquare, Plus } from 'lucide-react';
+import { Network, Search, Bell, MessageSquare, Plus, Menu } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import CreatePostModal from './CreatePostModal';
 
@@ -29,14 +29,17 @@ export default function Header() {
       boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+        <button className="apple-icon-btn show-on-mobile" style={{ display: 'none', marginRight: '-1rem' }}>
+          <Menu size={20} />
+        </button>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)', textDecoration: 'none' }}>
           <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
             <Network size={20} strokeWidth={2.5} />
           </div>
-          <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text-main)' }}>SRM Connect</span>
+          <span className="hide-on-mobile" style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text-main)' }}>SRM Connect</span>
         </Link>
         
-        <nav style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
+        <nav className="hide-on-mobile" style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
           {navLinks.map(link => {
             const isActive = location.pathname === link.path || (link.path !== '/' && location.pathname.startsWith(link.path));
             return (
@@ -62,13 +65,13 @@ export default function Header() {
         </nav>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <button 
           onClick={() => setIsCreateOpen(true)}
           className="btn btn-primary" 
           style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: 'var(--radius-full)' }}
         >
-          <Plus size={18} /> Create
+          <Plus size={18} /> <span className="hide-on-mobile">Create</span>
         </button>
 
         <div style={{ 

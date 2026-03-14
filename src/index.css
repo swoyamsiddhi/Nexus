@@ -372,3 +372,172 @@ input[type="checkbox"], input[type="radio"] {
   box-shadow: var(--shadow-md);
 }
 
+/* --- RESPONSIVE UTILITIES & GRIDS --- */
+
+/* Responsive Grid System */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.responsive-grid-sm {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Responsive Hide/Show classes */
+.hide-on-mobile {
+  display: flex;
+}
+
+.show-on-mobile {
+  display: none !important;
+}
+
+/* Mobile Base Structural Adjustments */
+.mobile-stack {
+  display: flex;
+}
+.mobile-stack-reverse {
+  display: flex;
+}
+.mobile-sidebar-left, .mobile-sidebar-right {
+  display: flex;
+}
+
+/* Padding scale for module pages */
+.responsive-padding {
+  padding: 0 2rem;
+}
+
+@media (max-width: 1024px) {
+  /* Hide the right sidebar on medium devices like tablets */
+  .mobile-sidebar-right {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-padding {
+    padding: 0 1rem !important;
+  }
+  
+  .page-content {
+    padding: 1rem;
+  }
+
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  .show-on-mobile {
+    display: flex !important;
+  }
+
+  /* Force stack layouts for split views */
+  .mobile-stack {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  .mobile-stack-reverse {
+    flex-direction: column-reverse !important;
+    gap: 1rem !important;
+  }
+
+  /* Hide left sidebar entirely on phones, assume hamburger or bottom nav */
+  .mobile-sidebar-left {
+    display: none !important;
+  }
+
+  .responsive-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Header adjustments */
+  header.glass {
+    padding: 0 1rem !important;
+  }
+
+  .header-actions {
+    gap: 0.5rem !important;
+  }
+
+  .search-container {
+    width: 200px !important;
+  }
+
+  /* Form and Select adjustments for mobile */
+  .form-group > div.display-grid {
+     grid-template-columns: 1fr !important;
+  }
+
+  /* Full width cards on mobile */
+  .card {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
+
+  /* Add padding to bottom to account for fixed nav */
+  .app-container {
+    padding-bottom: 64px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-container {
+    display: none !important; /* Hide search bar entirely on very small screens, keep icon */
+  }
+}
+
+/* Mobile Bottom Navigation */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-color);
+  z-index: 1000;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+  padding-bottom: env(safe-area-inset-bottom); /* iOS support */
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.65rem;
+  font-weight: 500;
+  flex: 1;
+  height: 100%;
+  transition: all var(--transition-fast);
+}
+
+.mobile-nav-item.active {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.mobile-nav-item:active {
+  transform: scale(0.95);
+}
+

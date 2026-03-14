@@ -68,10 +68,10 @@ export default function Teams() {
   ];
 
   return (
-    <div style={{ display: 'flex', gap: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
+    <div className="mobile-stack" style={{ display: 'flex', gap: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
       
       {/* Left Sidebar */}
-      <aside style={{ width: '240px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '1rem' }}>
+      <aside className="mobile-sidebar-left" style={{ width: '240px', flexShrink: 0, flexDirection: 'column', gap: '2rem', marginTop: '1rem' }}>
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           <a href="#" className="btn-ghost" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>
             <Home size={18} /> Home Feed
@@ -158,7 +158,7 @@ export default function Teams() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+          <div className="responsive-grid-sm">
             {students.map((student, i) => (
               <div key={student.id} className="card animate-fade-in" style={{ animationDelay: `${i * 0.1}s`, padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>

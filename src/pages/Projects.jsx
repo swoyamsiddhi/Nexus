@@ -48,16 +48,16 @@ export default function Projects() {
     <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
       
       {/* Sub Navigation */}
-      <div style={{ display: 'flex', gap: '2rem', borderBottom: '1px solid var(--border-color)', margin: '0 2rem 2rem 2rem' }}>
+      <div style={{ display: 'flex', gap: '2rem', borderBottom: '1px solid var(--border-color)', margin: '0 0 2rem 0', overflowX: 'auto' }}>
         <button style={{ padding: '1rem 0', fontWeight: 600, color: 'var(--primary)', borderBottom: '2px solid var(--primary)', background: 'none', borderTop: 'none', borderLeft: 'none', borderRight: 'none', cursor: 'pointer' }}>Discover</button>
         <button style={{ padding: '1rem 0', fontWeight: 500, color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}>My Projects</button>
         <button style={{ padding: '1rem 0', fontWeight: 500, color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}>Collabs</button>
       </div>
 
-      <div style={{ padding: '0 2rem', paddingBottom: '3rem' }}>
+      <div style={{ paddingBottom: '3rem' }}>
         
         {/* Header Area */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+        <div className="mobile-stack" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
           <div>
             <div style={{ display: 'inline-block', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', fontSize: '0.7rem', fontWeight: 800, padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-full)', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
               COMMUNITY SHOWCASE
@@ -73,8 +73,8 @@ export default function Projects() {
         </div>
 
         {/* Tabs & Filters */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', marginBottom: '2rem' }}>
-          <div style={{ display: 'flex', gap: '2rem' }}>
+        <div className="mobile-stack" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', gap: '2rem', overflowX: 'auto', paddingBottom: '0.5rem', flex: 1, width: '100%' }} className="custom-scrollbar">
             <button style={{ padding: '0.75rem 0', fontWeight: 600, color: 'var(--primary)', borderBottom: '2px solid var(--primary)', background: 'none', borderTop: 'none', borderLeft: 'none', borderRight: 'none', cursor: 'pointer' }}>All Projects</button>
             <button style={{ padding: '0.75rem 0', fontWeight: 500, color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}>Web Dev</button>
             <button style={{ padding: '0.75rem 0', fontWeight: 500, color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}>AI & ML</button>
@@ -88,7 +88,7 @@ export default function Projects() {
         </div>
 
         {/* Project Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <div className="responsive-grid">
           {projects.map((proj, i) => (
             <div key={proj.id} className="card animate-fade-in" style={{ animationDelay: `${i * 0.1}s`, display: 'flex', flexDirection: 'column', height: '100%' }}>
               

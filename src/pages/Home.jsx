@@ -2,9 +2,9 @@ import { Home as HomeIcon, Calendar, Users, Bookmark, Hash, Plus, Megaphone, Roc
 
 export default function Home() {
   return (
-    <div style={{ display: 'flex', gap: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
+    <div className="mobile-stack" style={{ display: 'flex', gap: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
       {/* Left Sidebar */}
-      <aside style={{ width: '240px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <aside className="mobile-sidebar-left" style={{ width: '240px', flexShrink: 0, flexDirection: 'column', gap: '2rem' }}>
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
             <HomeIcon size={18} /> Home Feed
@@ -44,7 +44,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }} className="custom-scrollbar">
           <button className="btn btn-primary" style={{ backgroundColor: '#E0E7FF', color: 'var(--primary)', boxShadow: 'none' }}>All</button>
           <button className="btn btn-outline" style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--surface-color)' }}><Calendar size={16} /> Events</button>
           <button className="btn btn-outline" style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--surface-color)' }}><Rocket size={16} /> Projects</button>
@@ -119,7 +119,7 @@ export default function Home() {
       </div>
 
       {/* Right Sidebar */}
-      <aside style={{ width: '320px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <aside className="mobile-sidebar-right" style={{ width: '320px', flexShrink: 0, flexDirection: 'column', gap: '1.5rem' }}>
         <div className="card" style={{ padding: '1.5rem', border: 'none', boxShadow: 'var(--shadow-sm)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <h3 style={{ fontSize: '1.125rem', margin: 0 }}>Upcoming for You</h3>

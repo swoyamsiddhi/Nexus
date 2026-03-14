@@ -53,9 +53,9 @@ export default function Events() {
   ];
 
   return (
-    <div style={{ display: 'flex', gap: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
+    <div className="mobile-stack" style={{ display: 'flex', gap: '2rem', maxWidth: '1400px', margin: '0 auto' }}>
       {/* Left Sidebar for Categories */}
-      <aside style={{ width: '220px', flexShrink: 0, marginTop: '1rem' }}>
+      <aside className="mobile-sidebar-left" style={{ width: '220px', flexShrink: 0, marginTop: '1rem' }}>
         <h4 style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em', marginBottom: '1rem' }}>Categories</h4>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
@@ -113,7 +113,7 @@ export default function Events() {
         </div>
 
         {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <div className="responsive-grid">
           {events.map((event, i) => (
             <div key={event.id} className="card animate-fade-in" style={{ animationDelay: `${i * 0.1}s`, display: 'flex', flexDirection: 'column', height: '100%', border: 'none', boxShadow: 'var(--shadow-md)' }}>
               <div style={{ position: 'relative', height: '160px', overflow: 'hidden' }}>
