@@ -42,9 +42,6 @@ export default function Home() {
             <h1 style={{ fontSize: '1.875rem', marginBottom: '0.25rem' }}>Student Feed</h1>
             <p style={{ color: 'var(--text-muted)' }}>What's happening in SRM today</p>
           </div>
-          <button className="btn btn-primary">
-            <Plus size={18} /> Post Update
-          </button>
         </div>
 
         <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
