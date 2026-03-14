@@ -1,8 +1,11 @@
-import { Network, Search, Bell, MessageSquare } from 'lucide-react';
+import React, { useState } from 'react';
+import { Network, Search, Bell, MessageSquare, Plus } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import CreatePostModal from './CreatePostModal';
 
 export default function Header() {
   const location = useLocation();
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -13,6 +16,7 @@ export default function Header() {
   ];
 
   return (
+    <>
     <header className="glass" style={{
       display: 'flex',
       alignItems: 'center',
@@ -59,6 +63,14 @@ export default function Header() {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <button 
+          onClick={() => setIsCreateOpen(true)}
+          className="btn btn-primary" 
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: 'var(--radius-full)' }}
+        >
+          <Plus size={18} /> Create
+        </button>
+
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
@@ -103,5 +115,7 @@ export default function Header() {
         </div>
       </div>
     </header>
+    <CreatePostModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
+    </>
   );
 }
