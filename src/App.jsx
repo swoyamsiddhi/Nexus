@@ -5,6 +5,7 @@ import Events from './pages/Events';
 import Projects from './pages/Projects';
 import Teams from './pages/Teams';
 import Skills from './pages/Skills';
+import EventDetail from './pages/EventDetail';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="events" element={<Events />} />
+        <Route path="events/:id" element={<EventDetail />} />
         <Route path="teams" element={<Teams />} />
         <Route path="projects" element={<Projects />} />
         <Route path="skills" element={<Skills />} />
