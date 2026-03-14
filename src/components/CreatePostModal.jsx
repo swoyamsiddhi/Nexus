@@ -31,13 +31,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
           <button
             key={option.id}
             onClick={() => setSelectedType(option.id)}
-            style={{ 
-              display: 'flex', alignItems: 'center', gap: '1.5rem', padding: '1.25rem', 
-              backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', 
-              borderRadius: 'var(--radius-lg)', cursor: 'pointer', textAlign: 'left',
-              transition: 'all var(--transition-fast)'
-            }}
-            className="hover-lift"
+            className="option-card"
           >
             <div style={{ width: '48px', height: '48px', borderRadius: 'var(--radius-md)', backgroundColor: option.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: option.color, flexShrink: 0 }}>
               <option.icon size={24} />
