@@ -6,17 +6,17 @@ export default function Home() {
       {/* Left Sidebar */}
       <aside style={{ width: '240px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary-subtle)', color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
             <HomeIcon size={18} /> Home Feed
           </a>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
-            <Calendar size={18} className="text-muted" /> My Schedule
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
+            <Calendar size={18} /> My Schedule
           </a>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
-            <Users size={18} className="text-muted" /> Joined Teams
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
+            <Users size={18} /> Joined Teams
           </a>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
-            <Bookmark size={18} className="text-muted" /> Saved Items
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }} className="btn-ghost">
+            <Bookmark size={18} /> Saved Items
           </a>
         </nav>
 

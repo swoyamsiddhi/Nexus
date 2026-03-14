@@ -73,18 +73,18 @@ export default function Teams() {
       {/* Left Sidebar */}
       <aside style={{ width: '240px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '1rem' }}>
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <a href="#" className="btn-ghost" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }}>
-            <Home size={20} className="text-muted" /> Home Feed
+          <a href="#" className="btn-ghost" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>
+            <Home size={18} /> Home Feed
           </a>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
-            <Compass size={20} /> Explore Matches
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
+            <Compass size={18} /> Explore Matches
           </a>
-          <a href="#" className="btn-ghost" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><MessageSquare size={20} className="text-muted" /> Messages</div>
+          <a href="#" className="btn-ghost" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><MessageSquare size={18} /> Messages</div>
             <div style={{ backgroundColor: 'var(--primary)', color: 'white', fontSize: '0.7rem', fontWeight: 'bold', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%' }}>3</div>
           </a>
-          <a href="#" className="btn-ghost" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-main)', textDecoration: 'none', fontWeight: 500 }}>
-            <User size={20} className="text-muted" /> My Profile
+          <a href="#" className="btn-ghost" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)', color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>
+            <User size={18} /> My Profile
           </a>
         </nav>
 

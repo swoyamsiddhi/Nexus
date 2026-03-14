@@ -24,13 +24,15 @@ export default function Header() {
       zIndex: 100,
       boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)', textDecoration: 'none' }}>
-          <Network size={24} strokeWidth={2.5} />
+          <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            <Network size={20} strokeWidth={2.5} />
+          </div>
           <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text-main)' }}>SRM Connect</span>
         </Link>
         
-        <nav style={{ display: 'flex', gap: '1.5rem' }}>
+        <nav style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
           {navLinks.map(link => {
             const isActive = location.pathname === link.path || (link.path !== '/' && location.pathname.startsWith(link.path));
             return (
@@ -38,14 +40,16 @@ export default function Header() {
                 key={link.name} 
                 to={link.path}
                 style={{
-                  color: isActive ? 'var(--text-main)' : 'var(--text-muted)',
+                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                  backgroundColor: isActive ? 'var(--primary-light)' : 'transparent',
                   fontWeight: isActive ? 600 : 500,
                   fontSize: '0.9rem',
                   textDecoration: 'none',
-                  padding: '1.35rem 0.25rem',
-                  borderBottom: isActive ? '2px solid var(--primary)' : '2px solid transparent',
+                  padding: '0.5rem 1rem',
+                  borderRadius: 'var(--radius-full)',
                   transition: 'all var(--transition-fast)'
                 }}
+                className={isActive ? '' : 'btn-ghost'}
               >
                 {link.name}
               </Link>
