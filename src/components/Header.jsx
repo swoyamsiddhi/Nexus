@@ -98,12 +98,18 @@ export default function Header() {
           />
         </div>
 
-        <button className="btn-ghost" style={{ padding: '0.5rem', borderRadius: '50%', color: 'var(--text-muted)' }}>
-          <Bell size={20} />
-        </button>
-        <button className="btn-ghost" style={{ padding: '0.5rem', borderRadius: '50%', color: 'var(--text-muted)' }}>
-          <MessageSquare size={20} />
-        </button>
+        <div className="apple-pill">
+          <button className="apple-icon-btn">
+            <Bell size={18} strokeWidth={2} />
+            <span className="notification-dot"></span>
+          </button>
+          
+          <div style={{ width: '1px', height: '18px', backgroundColor: 'rgba(15, 23, 42, 0.1)', margin: '0 4px' }}></div>
+          
+          <button className="apple-icon-btn">
+            <MessageSquare size={18} strokeWidth={2} />
+          </button>
+        </div>
         
         <div style={{ 
           width: '34px', height: '34px', 
