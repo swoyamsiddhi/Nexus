@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SRM Connect — Campus Engagement Platform
 
-## Getting Started
+SRM Connect is a comprehensive campus platform designed for SRM University students to discover events, join clubs, find hackathon teammates, and collaborate on projects. Built with a focus on modern aesthetics, real-time engagement, and specific campus rules.
 
-First, run the development server:
+## 🚀 Tech Stack
 
+- **Web**: Next.js 14 (App Router), Tailwind CSS, Shadcn/UI, Lucide Icons.
+- **Mobile**: React Native with Expo, NativeWind (Tailwind), FlashList.
+- **Backend & Auth**: Supabase (PostgreSQL, Realtime, Storage, Auth).
+- **Hosting**: Vercel (Web), Expo Application Services (Mobile).
+
+## 🛠️ Prerequisites
+
+- **Node.js**: v18+ 
+- **Supabase Account**: Required for database and authentication.
+- **Vercel CLI**: For deployment (`npm i -g vercel`).
+- **Expo Go**: For testing the mobile app on physical devices.
+
+---
+
+## 🏗️ Local Development Setup
+
+### 1. Web Setup
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <your-repo-url>
+cd srm-connect-web
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Variables
+Create a `.env.local` file in the root:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run Development Server
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🌩️ Supabase Configuration
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Database Schema
+Run the SQL from `supabase_setup.sql` in your Supabase SQL Editor. This sets up:
+- **Tables**: `users`, `clubs`, `events`, `registrations`, `team_posts`, `projects`, etc.
+- **RLS Policies**: Secure access control for all data.
+- **Auth Trigger**: Automatically creates a profile record on signup.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Auth Rules
+Go to **Authentication -> Providers -> Email Domains** and add `srmist.edu.in`. This ensures only verified students can sign up.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. Storage Buckets
+Create the following public buckets:
+- `avatars`
+- `club-assets`
+- `event-banners`
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚢 Deployment to Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 1. Build Check
+Ensure your app builds locally:
+```bash
+npm run build
+```
+
+### 2. Deploy
+Use the Vercel CLI or connect your GitHub repo to Vercel.
+```bash
+vercel --prod
+```
+
+### 3. Set Vercel Env Vars
+Add the following in your Vercel Project Settings:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (Mark as Secret)
+
+### 4. Auth Callbacks
+In Supabase **Auth -> URL Configuration**, set the base site URL to your Vercel deployment and add `/auth/callback` to the redirect URLs.
+
+---
+
+## 📱 Mobile App (Expo)
+
+Find the mobile code base in the `srm-connect-mobile` directory.
+
+```bash
+cd srm-connect-mobile
+npm install
+npx expo start
+```
+
+For more details on mobile features, refer to the documentation inside that directory.
+
+---
+
+## 🛡️ License
+Built for SRM University. All rights reserved.
