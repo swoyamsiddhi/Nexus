@@ -4,8 +4,32 @@ import Link from 'next/link'
 import { CalendarDays, MapPin, Users, Clock, ArrowLeft } from 'lucide-react'
 import { RegistrationButton } from './registration-button'
 import { Badge } from '@/components/ui/badge'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const supabase = createClient()
+  const { data: event } = await supabase
+    .from('events')
+    .select('title, description, banner_url, club:clubs(name)')
+    .eq('id', parseInt(params.id))
+    .single()
+
+  if (!event) return { title: 'Event Not Found' }
+
+  return {
+    title: event.title,
+    description: event.description?.slice(0, 160) ?? `${event.title} — a campus event by ${(event.club as any)?.name ?? 'SRM Connect'}.`,
+    openGraph: {
+      title: `${event.title} | SRM Connect`,
+      description: event.description?.slice(0, 160),
+      images: event.banner_url ? [{ url: event.banner_url }] : [],
+      type: 'website',
+    },
+  }
+}
+
 
 export default async function EventDetailsPage({ params }: { params: { id: string } }) {
   const eventId = parseInt(params.id)

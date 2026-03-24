@@ -3,7 +3,14 @@ import { EventCard } from '@/components/events/event-card'
 import { MyRegistrations } from '@/components/events/my-registrations'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { buttonVariants } from '@/components/ui/button'
+import { EventsEmptyState } from '@/components/ui/empty-state'
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Events',
+  description: 'Discover and register for events at SRM University — technical, cultural, sports and more.',
+}
 
 export const dynamic = 'force-dynamic'
 
@@ -23,8 +30,6 @@ export default async function EventsDirectoryPage({
   const category = searchParams.category || ''
   const time = searchParams.time || 'upcoming'
 
-  // Fetch campus events
-  // We need current registrations count. We'll join registrations.
   let query = supabase
     .from('events')
     .select(`
@@ -34,7 +39,6 @@ export default async function EventsDirectoryPage({
     `)
     .order('event_date', { ascending: true })
 
-  // Apply filters
   const now = new Date()
   
   if (time === 'week') {
@@ -46,20 +50,11 @@ export default async function EventsDirectoryPage({
     nextMonth.setMonth(now.getMonth() + 1)
     query = query.gte('event_date', now.toISOString()).lte('event_date', nextMonth.toISOString())
   } else {
-    // default upcoming
     query = query.gte('event_date', now.toISOString())
-  }
-
-  // category filter logic implies filtering events by the club's category currently, 
-  // or if events have their own category we'd filter that. 
-  // But our events table doesn't have a category column in the master schema, so we filter by club category via inner join 
-  if (category) {
-    query = query.eq('club.category', category)
   }
 
   const { data: rawEvents } = await query
 
-  // Filter out where inner join failed if using postgrest equijoin logic for 'club' vs 'club!inner'
   let events = rawEvents || []
   if (category) {
     events = events.filter((e: any) => e.club && e.club.category === category)
@@ -138,10 +133,7 @@ export default async function EventsDirectoryPage({
 
           {/* Events Grid */}
           {(!events || events.length === 0) ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-xl font-medium">No events found.</p>
-              <p className="text-muted-foreground mt-2">Try adjusting your filters to see more events.</p>
-            </div>
+            <EventsEmptyState />
           ) : (
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {events.map((event: any) => (

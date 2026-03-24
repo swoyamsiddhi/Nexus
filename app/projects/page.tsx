@@ -1,18 +1,25 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import { getProjects } from './actions'
 import { ProjectCard } from '@/components/projects/project-card'
+import { ProjectsEmptyState } from '@/components/ui/empty-state'
 import { buttonVariants } from '@/components/ui/button'
 import { Plus, Search, Sparkles, Filter, Layout } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Project } from '@/components/projects/types'
+import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Project Collaboration',
+  description: 'Find projects to collaborate on, get expert feedback, or find a mentor to guide your build at SRM University.',
+}
 
 export default async function ProjectsPage({ searchParams }: { searchParams: { looking_for?: string, stack?: string } }) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
+  const { getProjects } = await import('./actions')
   const filter = searchParams.looking_for || 'all'
   const stack = searchParams.stack
   
@@ -98,11 +105,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: { l
                ))}
              </div>
            ) : (
-             <div className="text-center py-24 bg-muted/10 rounded-[3rem] border-2 border-dashed border-muted">
-                <Sparkles className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-                <h3 className="text-2xl font-black italic uppercase tracking-tighter">No project matches</h3>
-                <p className="text-muted-foreground mt-2 font-medium">Try adjusting your filters or be the first to post!</p>
-             </div>
+             <ProjectsEmptyState />
            )}
         </div>
       </div>
