@@ -30,11 +30,17 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+import { Navbar } from '@/components/layout/Navbar'
+import { createClient } from '@/lib/supabase/server'
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
     <html
       lang="en"
@@ -42,7 +48,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        {children}
+        <Navbar userId={user?.id} />
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   )
