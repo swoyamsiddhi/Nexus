@@ -57,6 +57,7 @@ export default async function EventsDirectoryPage({
 
   let events = rawEvents || []
   if (category) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     events = events.filter((e: any) => e.club && e.club.category === category)
   }
 
@@ -136,6 +137,7 @@ export default async function EventsDirectoryPage({
             <EventsEmptyState />
           ) : (
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {events.map((event: any) => (
                 <EventCard 
                   key={event.id}

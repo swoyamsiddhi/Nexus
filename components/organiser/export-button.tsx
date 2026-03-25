@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { FileDown } from 'lucide-react'
 
-export function ExportCSVButton({ data, filename }: { data: any[], filename: string }) {
+export function ExportCSVButton({ data, filename }: { data: Record<string, unknown>[], filename: string }) {
   const exportToCSV = () => {
     if (data.length === 0) return
 

@@ -67,6 +67,7 @@ export default async function TeamsPage({
 
       {teams && teams.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {teams.map((team: any) => (
             <TeamPostCard key={team.id} post={team} currentUserId={user.id} />
           ))}

@@ -3,7 +3,7 @@ import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
 
 import { cn } from "@/lib/utils"
 
-function Progress({ className, value, ...props }: any) {
+function Progress({ className, value, ...props }: React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & { value?: number | null }) {
   return (
     <ProgressPrimitive.Root
       data-slot="progress"

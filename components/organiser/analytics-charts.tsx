@@ -14,9 +14,9 @@ export function AnalyticsCharts({
   branchData, 
   yearData 
 }: { 
-  regData: any[], 
-  branchData: any[], 
-  yearData: any[] 
+  regData: { date: string; count: number }[], 
+  branchData: { name: string; students: number }[], 
+  yearData: { name: string; value: number }[] 
 }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -56,6 +56,7 @@ export default async function AdminClubsPage() {
                   </TableCell>
                 </TableRow>
               ) : (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 clubs.map((club: any) => (
                   <TableRow key={club.id}>
                     <TableCell className="font-medium">{club.name}</TableCell>

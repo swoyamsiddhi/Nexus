@@ -57,6 +57,7 @@ export async function MyRegistrations() {
         <div className="space-y-4">
           <h2 className="text-xl font-bold tracking-tight">Upcoming Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {upcoming.map((reg: any) => (
               <RegistrationCard key={reg.id} registration={reg} />
             ))}
@@ -68,6 +69,7 @@ export async function MyRegistrations() {
         <div className="space-y-4">
           <h2 className="text-xl font-bold tracking-tight text-muted-foreground">Past Events</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-70 hover:opacity-100 transition-opacity">
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {past.map((reg: any) => (
               <RegistrationCard key={reg.id} registration={reg} />
             ))}
@@ -78,6 +80,7 @@ export async function MyRegistrations() {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function RegistrationCard({ registration }: { registration: any }) {
   const event = Array.isArray(registration.event) ? registration.event[0] : registration.event
   if (!event) return null

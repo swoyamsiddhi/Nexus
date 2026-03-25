@@ -9,10 +9,10 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { buttonVariants } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { BarChart3, ChevronRight, Calendar, Users } from 'lucide-react'
+import { BarChart3 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -79,6 +79,7 @@ export default async function ManageEventsPage() {
                 </TableCell>
               </TableRow>
             ) : (
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               events.map((event: any) => {
                 const isPast = new Date(event.event_date) < new Date()
                 const regCount = event.registrations?.[0]?.count || 0

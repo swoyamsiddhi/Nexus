@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
   return {
     title: event.title,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     description: event.description?.slice(0, 160) ?? `${event.title} — a campus event by ${(event.club as any)?.name ?? 'SRM Connect'}.`,
     openGraph: {
       title: `${event.title} | SRM Connect`,

@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+
 import { Progress } from '@/components/ui/progress'
 import { 
   Table, 
@@ -14,9 +14,7 @@ import {
 } from '@/components/ui/table'
 import { 
   Users, 
-  ArrowLeft,
-  Calendar,
-  MapPin
+  ArrowLeft
 } from 'lucide-react'
 import { AnalyticsCharts } from '@/components/organiser/analytics-charts'
 import { ExportCSVButton } from '@/components/organiser/export-button'
@@ -65,6 +63,7 @@ export default async function EventDashboard({ params }: { params: { id: string 
     .eq('event_id', eventId)
     .order('registered_at', { ascending: false })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const students = (registrations || []).map(r => r.student as any)
   const regCount = students.length
   const fillPercentage = event.max_capacity ? Math.round((regCount / event.max_capacity) * 100) : null

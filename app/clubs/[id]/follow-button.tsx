@@ -17,7 +17,7 @@ export function FollowButton({ clubId, initialIsFollowing, initialFollowerCount 
   // useOptimistic state holds the current visual state
   const [optimisticState, addOptimisticState] = useOptimistic(
     { isFollowing: initialIsFollowing, followerCount: initialFollowerCount },
-    (state, action: { type: 'TOGGLE' }) => {
+    (state, _action: { type: 'TOGGLE' }) => {
       return {
         isFollowing: !state.isFollowing,
         followerCount: state.isFollowing ? state.followerCount - 1 : state.followerCount + 1

@@ -81,8 +81,8 @@ export function CreateEventForm({ clubs }: { clubs: { id: number, name: string }
       } else {
         router.push(`/organiser/events`)
       }
-    } catch (err: any) {
-      alert(err.message)
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setIsPending(false)
     }

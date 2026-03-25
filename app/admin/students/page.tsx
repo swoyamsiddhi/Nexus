@@ -67,6 +67,7 @@ export default async function AdminStudentsPage({
                   </TableCell>
                 </TableRow>
               ) : (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 students.map((student: any) => (
                   <TableRow key={student.id}>
                     <TableCell className="font-medium">{student.full_name}</TableCell>

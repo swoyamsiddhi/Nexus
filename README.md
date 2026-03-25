@@ -44,6 +44,8 @@ npm run dev
 
 ## 🌩️ Supabase Configuration
 
+For a detailed step-by-step walkthrough, refer to the [Supabase Setup Guide](file:///Users/swoyamsiddhipattanayak/.gemini/antigravity/brain/e8abeb4d-fad7-4619-b020-d96556b304e0/supabase_guide.md).
+
 ### 1. Database Schema
 Run the SQL from `supabase_setup.sql` in your Supabase SQL Editor. This sets up:
 - **Tables**: `users`, `clubs`, `events`, `registrations`, `team_posts`, `projects`, etc.

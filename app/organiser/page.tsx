@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+
 import { 
   PlusCircle, 
   Megaphone, 
@@ -45,6 +45,7 @@ export default async function OrganiserDashboard() {
   }
 
   // For simplicity, we'll focus on the first managed club in the dashboard
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const club = managedClubs[0].club as any
   
   // Fetch Stats
@@ -57,6 +58,7 @@ export default async function OrganiserDashboard() {
     supabase.from('events').select('id, title, event_date').eq('club_id', club.id).gte('event_date', new Date().toISOString()),
     supabase.from('registrations')
       .select('id', { count: 'exact' })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter('event_id', 'in', `(${managedClubs.map(c => (c.club as any).id).join(',')})`)
       .gte('registered_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
   ])

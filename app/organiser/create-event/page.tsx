@@ -16,6 +16,7 @@ export default async function CreateEventPage() {
 
   if (!managedClubs || managedClubs.length === 0) redirect('/organiser')
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const clubs = managedClubs.map(c => c.club as any)
 
   return (

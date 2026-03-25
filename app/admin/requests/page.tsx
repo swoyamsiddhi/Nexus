@@ -53,6 +53,7 @@ export default async function AdminRequestsPage() {
                   </TableCell>
                 </TableRow>
               ) : (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 requests.map((req: any) => (
                   <TableRow key={req.id}>
                     <TableCell className="font-medium">{req.user?.full_name}</TableCell>
