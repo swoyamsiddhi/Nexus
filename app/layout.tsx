@@ -32,6 +32,7 @@ export const metadata: Metadata = {
 
 import { Navbar } from '@/components/layout/Navbar'
 import { createClient } from '@/lib/supabase/server'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 export default async function RootLayout({
   children,
@@ -44,14 +45,16 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${geistSans.variable} ${geistMono.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <Navbar userId={user?.id} />
-        <main>
-          {children}
-        </main>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Navbar userId={user?.id} />
+          <main>
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   )
